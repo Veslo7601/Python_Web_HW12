@@ -57,11 +57,11 @@ async def get_email_from_refresh_token(refresh_token: str):
     """function get email"""
     try:
         payload = jwt.decode(refresh_token, SECRET_KEY, algorithms=[ALGORITHM])
-        if payload['scope'] == 'refresh_token'
+        if payload['scope'] == 'refresh_token':
             email = payload['sub']
             return email
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid scope for token")
-    except:
+    except JWTError:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Could not validate credentials")
     
 async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_database)):

@@ -9,7 +9,7 @@ class PhoneNumber(Base):
     __tablename__ = "phone_numbers"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     phone_number: Mapped[str] = mapped_column(String(15), nullable=True)
-    contact_id: Mapped[str] = mapped_column(Integer, ForeignKey("contacts.id"))
+    contact_id: Mapped[int] = mapped_column(Integer, ForeignKey("contacts.id"))
     contact: Mapped['Contact'] = relationship("Contact", back_populates="phone_numbers")
 
 
@@ -18,7 +18,7 @@ class Email(Base):
     __tablename__ = "emails"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     email: Mapped[str] = mapped_column(String(128), nullable=True)
-    contact_id: Mapped[str] = mapped_column(Integer, ForeignKey("contacts.id"))
+    contact_id: Mapped[int] = mapped_column(Integer, ForeignKey("contacts.id"))
     contact: Mapped['Contact'] = relationship("Contact", back_populates="emails")
 
 
@@ -32,11 +32,16 @@ class Contact(Base):
     additional_data: Mapped[str] = mapped_column(String(256), nullable=True)
     phone_numbers: Mapped[list[PhoneNumber]] = relationship("PhoneNumber", back_populates="contact", cascade="all, delete-orphan")
     emails: Mapped[list[Email]] = relationship("Email", back_populates="contact", cascade="all, delete-orphan")
+    user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"))
+    user: Mapped['User'] = relationship("User", back_populates="contacts")
 
 
 class User(Base):
+    """Class for users"""
     __tablename__ = "users"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     email: Mapped[str] = mapped_column(String(150), nullable=False, unique=True)
     password: Mapped[str] = mapped_column(String(255), nullable=False)
+    avatar: Mapped[str] = mapped_column(String(255), nullable=False)
     refresh_token: Mapped[str] = mapped_column(String(255), nullable=True)
+    contacts: Mapped[list[Contact]] = relationship("Contact", back_populates="user", cascade="all, delete-orphan")
