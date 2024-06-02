@@ -55,3 +55,13 @@ class ContactResponse(ContactModel):
     class Config:
         orm_mode = True
 
+
+class UserModel(BaseModel):
+    username: str = Field(max_length=64)
+    password: str = Field(max_length=32)
+
+class UserResponse(UserModel):
+    id: int
+    
+    class Config:
+        orm_mode = True

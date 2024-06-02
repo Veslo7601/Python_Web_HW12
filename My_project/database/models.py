@@ -32,3 +32,11 @@ class Contact(Base):
     additional_data: Mapped[str] = mapped_column(String(256), nullable=True)
     phone_numbers: Mapped[list[PhoneNumber]] = relationship("PhoneNumber", back_populates="contact", cascade="all, delete-orphan")
     emails: Mapped[list[Email]] = relationship("Email", back_populates="contact", cascade="all, delete-orphan")
+
+
+class User(Base):
+    __tablename__ = "users"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    email: Mapped[str] = mapped_column(String(150), nullable=False, unique=True)
+    password: Mapped[str] = mapped_column(String(255), nullable=False)
+    refresh_token: Mapped[str] = mapped_column(String(255), nullable=True)
