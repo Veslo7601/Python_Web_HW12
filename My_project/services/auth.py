@@ -20,7 +20,7 @@ class Hash:
         """Function verify password"""
         return self.context.verify(plain_password, hashed_password)
 
-    def get_password_hash(self, password):
+    def get_password_hash(self, password: str):
         """Function to get password"""
         return self.context.hash(password)
 
@@ -63,10 +63,13 @@ async def get_email_from_refresh_token(refresh_token: str):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid scope for token")
     except JWTError:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Could not validate credentials")
-    
+
+
 async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_database)):
     """function get current user"""
-    exception = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Could not validate credentials", headers={"WWW-Authenticate": "Bearer"})
+    exception = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                              detail="Could not validate credentials",
+                              headers={"WWW-Authenticate": "Bearer"})
 
     try:
         payload = jwt.decode(token, SECRET_KEY,algorithms=[ALGORITHM])

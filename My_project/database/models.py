@@ -40,6 +40,7 @@ class User(Base):
     """Class for users"""
     __tablename__ = "users"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    username: Mapped[str] = mapped_column(String(32), nullable=True)
     email: Mapped[str] = mapped_column(String(150), nullable=False, unique=True)
     password: Mapped[str] = mapped_column(String(255), nullable=False)
     avatar: Mapped[str] = mapped_column(String(255), nullable=False)

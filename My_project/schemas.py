@@ -37,6 +37,7 @@ class ContactModel(BaseModel):
     additional_data: Optional[str] = Field(max_length=256, default=None)
     phone_numbers: List[PhoneNumberModel]
     emails: List[EmailModel]
+    users: int
 
 
 class ContactUpdateMidel(BaseModel):
@@ -60,6 +61,7 @@ class ContactResponse(ContactModel):
 class UserModel(BaseModel):
     """Base model for user"""
     username: str = Field(max_length=64)
+    email: str
     password: str = Field(max_length=32)
 
 class UserDBModel(BaseModel):
@@ -74,7 +76,9 @@ class UserDBModel(BaseModel):
 
 class UserResponse(UserModel):
     """Response model for user"""
-
+    user: UserDBModel
+    detail: str = "User successfully created"
+    
     class Config:
         orm_mode = True
 

@@ -12,12 +12,17 @@ router = APIRouter(prefix="/authentication")
 hash = Hash()
 security = HTTPBearer()
 
-@router.post("/signup", response_model=UserResponse)
-async def signup(body: UserModel, db: Session = Depends(get_database)):
+@router.post("/signup",
+             response_model=UserResponse,
+             status_code=status.HTTP_201_CREATED)
+async def signup(body: UserModel,
+                 db: Session = Depends(get_database)):
     # user_exist = db.query(User).filter(User.email == body.username).first()
     user_exist = await repository_users.get_user_by_email(body.email, db)
     if user_exist:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="User already exists")
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT,
+                            detail="User already exists")
+    
     body.password = hash.get_password_hash(body.password)
     new_user = await repository_users.create_user(body, db)
     return {"user": new_user, "detail": "User created"}
@@ -29,7 +34,8 @@ async def signup(body: UserModel, db: Session = Depends(get_database)):
     # return {"new_user": new_user.email}
 
 @router.post("/login", response_model=TokenModel)
-async def login(body: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_database)):
+async def login(body: OAuth2PasswordRequestForm = Depends(),
+                db: Session = Depends(get_database)):
     # user_exist = db.query(User).filter(User.email == body.username).first()
     user_exist = await repository_users.get_user_by_email(body.username, db)
     if user_exist is None:
