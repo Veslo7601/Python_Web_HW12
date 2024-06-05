@@ -6,12 +6,15 @@ from My_project.database.models import Contact, PhoneNumber, Email, User
 from My_project.schemas import ContactModel, ContactUpdateModel
 
 def get_contacts(skip: int, limit: int, user: User, db: Session) -> List[Contact]:
+    """function takes contacts by list"""
     return db.query(Contact).filter(Contact.user_id == user.id).offset(skip).limit(limit).all()
 
 def get_contact(contact_id: int, user: User, db: Session) -> Optional[Contact]:
+    """function get contact by ID"""
     return db.query(Contact).filter(and_(Contact.id == contact_id, Contact.user_id == user.id)).first()
 
 def create_contact(body: ContactModel, user: User, db: Session) -> Contact:
+    """function create new contact"""
     contact = Contact(
         first_name=body.first_name,
         last_name=body.last_name,
@@ -28,6 +31,7 @@ def create_contact(body: ContactModel, user: User, db: Session) -> Contact:
 
 
 def update_contact(contact_id: int, body: ContactUpdateModel, user: User, db: Session) -> Optional[Contact]:
+    """function update contact"""
     contact = db.query(Contact).filter(and_(Contact.id == contact_id, Contact.user_id == user.id)).first()
     if contact:
         if body.first_name is not None:
@@ -55,6 +59,7 @@ def update_contact(contact_id: int, body: ContactUpdateModel, user: User, db: Se
     return contact
 
 def remove_contact(contact_id: int, user: User, db: Session) -> Optional[Contact]:
+    """function delete contact"""
     contact = db.query(Contact).filter(and_(Contact.id == contact_id, Contact.user_id == user.id)).first()
     if contact:
         db.delete(contact)

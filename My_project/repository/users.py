@@ -8,6 +8,7 @@ async def get_user_by_email(email: str, db: Session) -> User:
     return db.query(User).filter(User.email == email).first()
 
 async def create_user(body: UserModel, db: Session) -> User:
+    """function create new user"""
     avatar = None
     try:
         g = Gravatar(body.email)
@@ -22,5 +23,6 @@ async def create_user(body: UserModel, db: Session) -> User:
 
 
 async def update_token(user: User, token: str | None, db: Session) -> None:
+    """function update token"""
     user.refresh_token = token
     db.commit()
