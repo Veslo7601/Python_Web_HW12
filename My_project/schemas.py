@@ -39,7 +39,8 @@ class ContactModel(BaseModel):
     emails: List[EmailModel]
 
 
-class ContactUpdateMidel(BaseModel):
+class ContactUpdateModel(BaseModel):
+    """Base model for update contact"""
     first_name: Optional[str] = Field(max_length=64)
     last_name: Optional[str] = Field(max_length=64)
     date_of_birthday: Optional[date]
@@ -57,11 +58,33 @@ class ContactResponse(ContactModel):
 
 
 class UserModel(BaseModel):
+    """Base model for user"""
     username: str = Field(max_length=64)
-    password: str = Field(max_length=32)
+    email: str = Field(max_length=256)
+    password: str = Field(min_length=8, max_length=255)
 
-class UserResponse(UserModel):
+class UserDBModel(BaseModel):
+    """Base model for user in database"""
     id: int
-    
+    username: str
+    email: str
+    avatar: str
+
     class Config:
         orm_mode = True
+
+class UserResponse(BaseModel):
+    """Response model for user"""
+    username: str
+    email: str
+    avatar: str
+    detail: str = "User successfully created"
+
+    class Config:
+        orm_mode = True
+
+class TokenModel(BaseModel):
+    """Base model for token"""
+    access_token: str
+    refresh_token: str
+    token_type: str = "bearer"
